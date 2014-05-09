@@ -53,7 +53,7 @@ Puppet::Type.type(:reboot).provide :linux do
 
     Puppet.debug("Launching 'ruby #{watcher}'")
     system("ruby '#{watcher}' #{Process.pid} #{@resource[:catalog_apply_timeout]} '#{shutdown_cmd}'")
-    Puppet.debug("Launched process #{$!.pid}")
+    Puppet.debug("Launched process #{$?.pid}")
   end
 
 end
