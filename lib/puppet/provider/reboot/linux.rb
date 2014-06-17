@@ -35,7 +35,7 @@ Puppet::Type.type(:reboot).provide :linux do
       raise ArgumentError, "The shutdown command was not found."
     end
 
-    timeout_in_minutes = (@resource[:timeout] / 60).ceil
+    timeout_in_minutes = (@resource[:timeout].to_i / 60).ceil
     shutdown_cmd = [shutdown_path, '-r', "+#{timeout_in_minutes}", "\"#{@resource[:message]}\""].join(' ')
     async_shutdown(shutdown_cmd)
   end
