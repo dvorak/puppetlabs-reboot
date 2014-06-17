@@ -58,6 +58,17 @@ if __FILE__ == $0
   exit!(0) if fork
   Dir::chdir('/')
 
+  # Make sure all file descriptors are closed
+  ObjectSpace.each_object(IO) do |io|
+      unless [STDIN, STDOUT, STDERR].include?(io)
+          io.close rescue nil
+      end
+  end
+
+  STDIN.reopen "/dev/null"
+  STDOUT.reopen "/dev/null"
+  STDERR.reopen "/dev/null"
+
   watcher = Watcher.new(ARGV)
   begin
     watcher.execute
