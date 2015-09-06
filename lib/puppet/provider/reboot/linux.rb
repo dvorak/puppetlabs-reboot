@@ -51,9 +51,13 @@ Puppet::Type.type(:reboot).provide :linux do
       raise ArgumentError, "The watcher program #{watcher} does not exist"
     end
 
-    Puppet.debug("Launching 'ruby #{watcher}'")
-    system("ruby '#{watcher}' #{Process.pid} #{@resource[:catalog_apply_timeout]} '#{shutdown_cmd}'")
-    Puppet.debug("Launched process #{$?.pid}")
+    if ENV['PUPPET_NO_AUTOREBOOT']
+      Puppet.info("Skipping reboot because PUPPET_NO_AUTOREBOOT environment variable is set")
+    else
+      Puppet.debug("Launching 'ruby #{watcher}'")
+      system("ruby '#{watcher}' #{Process.pid} #{@resource[:catalog_apply_timeout]} '#{shutdown_cmd}'")
+      Puppet.debug("Launched process #{$?.pid}")
+    end
   end
 
 end
